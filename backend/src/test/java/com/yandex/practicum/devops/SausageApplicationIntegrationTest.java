@@ -61,7 +61,7 @@ public class SausageApplicationIntegrationTest {
         assertThat(products, hasItem(hasProperty("name", is("Молочная"))));
         assertThat(products, hasItem(hasProperty("name", is("Нюренбергская"))));
         assertThat(products, hasItem(hasProperty("name", is("Мюнхенская"))));
-        assertThat(products, hasItem(hasProperty("name", is("Русская"))));
+        assertThat(products, hasItem(hasProperty("name", is("Американская"))));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class SausageApplicationIntegrationTest {
     private OrderController.OrderForm prepareOrderForm() {
         OrderController.OrderForm orderForm = new OrderController.OrderForm();
         OrderProductDto productDto = new OrderProductDto();
-	productDto.setProduct(new Product(6L, "Американская", 189, "https://res.cloudinary.com/sugrobov/image/upload/v1623323635/repos/sausages/1.jpg"));
+	productDto.setProduct(new Product(6L, "Американская", 189.00, "https://res.cloudinary.com/sugrobov/image/upload/v1623323635/repos/sausages/1.jpg"));
 	productDto.setQuantity(2);
         orderForm.setProductOrders(Collections.singletonList(productDto));
 

@@ -90,8 +90,8 @@ public class SausageApplicationIntegrationTest {
     private OrderController.OrderForm prepareOrderForm() {
         OrderController.OrderForm orderForm = new OrderController.OrderForm();
         OrderProductDto productDto = new OrderProductDto();
-        productDto.setProduct(new Product(1L, "Русская", 300.00, "http://placehold.it/200x100"));
-        productDto.setQuantity(2);
+	productDto.setProduct(new Product(6L, "Американская", 189, "https://res.cloudinary.com/sugrobov/image/upload/v1623323635/repos/sausages/1.jpg"));
+	productDto.setQuantity(2);
         orderForm.setProductOrders(Collections.singletonList(productDto));
 
         return orderForm;

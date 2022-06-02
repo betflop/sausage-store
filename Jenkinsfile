@@ -39,7 +39,7 @@ pipeline {
             steps {
                 archiveArtifacts(artifacts: 'backend/target/sausage-store-0.0.1-SNAPSHOT.jar')
                 archiveArtifacts(artifacts: 'frontend/dist/frontend/*')
-				sh "curl -X POST -H 'Content-type: application/json' --data '{"text":"Dmtriy Pashkov собрал приложение."}' https://hooks.slack.com/services/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"
+                curl -X POST -H 'Content-type: application/json' --data '{"text":"Dmtriy Pashkov собрал приложение."}' https://hooks.slack.com/services/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
             }
         }
     }

@@ -30,6 +30,7 @@ pipeline {
             steps {
                 dir("frontend") {
                     sh 'npm install' // Для фронта сначала загрузим все сторонние зависимости
+                    sh 'npm audit fix' // fix critical errors
                     sh 'npm run build' // Запустим сборку
                 }
             }

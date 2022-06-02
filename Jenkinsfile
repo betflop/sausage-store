@@ -42,5 +42,11 @@ pipeline {
                 archiveArtifacts(artifacts: 'frontend/dist/frontend/*')
             }
         }
+
+        stage('Webhook to Slack') {
+            steps {
+                curl -X POST -H 'Content-type: application/json' --data '{"text":"Dmtriy Pashkov собрал приложение."}' https://hooks.slack.com/services/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
+            }
+        }
     }
 }

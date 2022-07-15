@@ -87,6 +87,9 @@ deploy:
   script:
     - scp ./frontend/sausage-store-frontend.service ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/sausage-store-frontend.service
     - ssh ${DEV_USER}@${DEV_HOST} "export \"CURRENT_VERSION=${VERSION}\"; export \"VERSION=${VERSION}\"; export \"DEV_HOST=${DEV_HOST}\"; export \"NEXUS_REPO_URL=${NEXUS_REPO_URL}\"; export \"NEXUS_REPO_USER=${NEXUS_REPO_USER}\"; export \"NEXUS_REPO_PASS=${NEXUS_REPO_PASS}\"; setsid /bin/bash -s" < ./frontend/deploy.sh
+  when: manual
+  environment:
+    name: frontend/${CI_COMMIT_REF_SLUG}
 
 
 slack-message: # уведомляем в Slack
@@ -94,5 +97,5 @@ slack-message: # уведомляем в Slack
   script:
     - echo "Send notify to Slack"
     - >
-      curl -X POST -H 'Content-type: application/json' --data "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Вышла новая версия сосисочной - ${VERSION}.\"}},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Frontend:\n*<${NEXUS_REPO_URL}/sausage-store-pashkov-dmitriy-frontend/${VERSION}/sausage-store-${VERSION}.tar.gz|Download :arrow-down:>*\"}},{\"type\":\"context\",\"elements\":[{\"type\":\"mrkdwn\",\"text\":\":eyes: <@U03FRG969C6>\"}]}]}" https://hooks.slack.com/services/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
+      curl -X POST -H 'Content-type: application/json' --data "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Вышла новая версия сосисочной - ${VERSION}.\"}},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Frontend: *<${NEXUS_REPO_URL}/sausage-store-pashkov-dmitriy-frontend/${VERSION}/sausage-store-${VERSION}.tar.gz|Download :arrow-down:>*\"}},{\"type\":\"context\",\"elements\":[{\"type\":\"mrkdwn\",\"text\":\":eyes: <@U03FRG969C6>\"}]}]}" https://hooks.slack.com/services/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
   when: on_success

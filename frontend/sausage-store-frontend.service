@@ -1,0 +1,23 @@
+[Unit]
+Description=Sausage Store Frontend Service
+After=syslog.target
+
+[Service]
+WorkingDirectory=/var/www-data/
+ExecStart=http-server ./dist/frontend/ -p 443 --proxy http://localhost:8888
+User=front-user
+Type=simple
+# time to sleep before restarting a service
+RestartSec=5s
+# how many restarts are allowed
+StartLimitBurst=5
+Environment="REPORT_PATH=/var/www-data/htdocs"
+Environment="LOG_PATH=/var/jarservice/"
+StandardOutput=append:/logs/out.log
+# errors out
+StandardError=append:/logs/out.log
+KillMode=process
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

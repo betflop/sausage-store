@@ -12,7 +12,7 @@ include:
 
 stages:
    - build
-#   - test
+   - test
    - release
    - deploy
 
@@ -35,14 +35,14 @@ build-backend-code-job:
       - changes:
            - backend/**/*
 
-
+<!--
 spotbugs-sast:
   stage: test
   dependencies:
     - build-backend-code-job
   variables:
     COMPILE: "false"
-
+-->
 
 sonarqube-backend-sast:
   stage: test

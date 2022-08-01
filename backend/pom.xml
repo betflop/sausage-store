@@ -57,15 +57,11 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>${jacoco-maven-plugin.version}</version>
         </dependency>
-        
-        <!-->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-        -->
-
         <!--JACKSON-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

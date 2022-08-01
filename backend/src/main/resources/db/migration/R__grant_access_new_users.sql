@@ -1,12 +1,3 @@
-#GRANT SELECT ON product, orders, order_product TO read_user;
-#GRANT USAGE ON product, orders, order_product TO read_user;
-
-#GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE ON product, orders, order_product TO write_user;
-#GRANT USAGE, SELECT ON ALL SEQUENCES IN product, orders, order_product TO write_user;
-
-#GRANT ALL ON product, orders, order_product TO admin_user;
-#GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO admin_user;
-
 grant select on all tables in schema public to read_user;
 grant select, insert, update on all tables in schema public to write_user;
 grant all on all tables in schema public to admin_user;

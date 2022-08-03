@@ -73,7 +73,7 @@ release:
    rules:
       - changes:
            - backend/**/*
-
+   allow_failure: true
 
 deploy:
   stage: deploy

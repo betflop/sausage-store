@@ -5,7 +5,7 @@ set -xe
 
 #Перезаливаем дескриптор сервиса на ВМ для деплоя
 source .ENV_BACKEND
-envsubst < .ENV_BACKEND > /etc/systemd/system/sausage-store-backend.service
+sudo envsubst < .ENV_BACKEND > /etc/systemd/system/sausage-store-backend.service
 #sudo cp -rf sausage-store-backend.service /etc/systemd/system/sausage-store-backend.service
 #sudo rm -f .ENV_BACKEND || true
 sudo rm -f /home/jarservice/sausage-store.jar || true

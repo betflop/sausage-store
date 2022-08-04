@@ -13,7 +13,8 @@ ExecStart=/usr/bin/java -jar /home/jarservice/sausage-store.jar \
 --spring.datasource.url='jdbc:postgresql://${PSQL_HOST}:{$PSQL_PORT}/${PSQL_DB}' \
 --spring.datasource.username=${PSQL_USER} \
 --spring.datasource.password=${PSQL_PASSWD} \
---spring.data.mongodb.uri='mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:27018/${MONGO_DATABASE}?tls=true&replicaSet=rs01'
+-Dspring.data.mongodb.uri='mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:27018/${MONGO_DATABASE}?tls=true&replicaSet=rs01'
+#--spring.data.mongodb.uri='mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:27018/${MONGO_DATABASE}?tls=true&replicaSet=rs01'
 
 User=jarservice
 Restart=always

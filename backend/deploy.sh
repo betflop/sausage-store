@@ -4,8 +4,10 @@
 set -xe
 
 #Перезаливаем дескриптор сервиса на ВМ для деплоя
+source /home/jarservice/.ENV_BACKEND
 sudo cp -rf sausage-store-backend.service /etc/systemd/system/sausage-store-backend.service
 sudo rm -f /home/jarservice/sausage-store.jar || true
+sudo rm -f /home/jarservice/.ENV_BACKEND || true
 
 #Скачиваем артефакт
 cd /tmp

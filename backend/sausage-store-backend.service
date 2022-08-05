@@ -15,6 +15,7 @@ User=jarservice
 Restart=always
 RestartSec=5s
 StartLimitBurst=5
+Environment="SPRING_FLYWAY_ENABLED=false"
 Environment="REPORT_PATH=/var/www-data/htdocs"
 Environment="LOG_PATH=/var/jarservice/"
 #Environment=REPORT_PATH=/log/reports

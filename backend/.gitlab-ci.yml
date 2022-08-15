@@ -9,6 +9,8 @@ variables:
 
 include:
   - template: Security/SAST.gitlab-ci.yml
+  - project: 'templates/ci'
+    file: 'DockerInDockerTemplate.yml'
 
 stages:
    - build
@@ -75,6 +77,7 @@ release:
            - backend/**/*
    allow_failure: true
 
+
 deploy:
   stage: deploy
   before_script:
@@ -103,4 +106,3 @@ slack-message: # уведомляем в Slack
     - >
       curl -X POST -H 'Content-type: application/json' --data "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Вышла новая версия сосисочной - ${VERSION}.\"}},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Backend: *<${NEXUS_REPO_URL}/sausage-store-pashkov-dmitriy-backend/com/yandex/practicum/devops/sausage-store/${VERSION}/sausage-store-${VERSION}.jar|Download :arrow-down:>*\"}},{\"type\":\"divider\"},{\"type\":\"context\",\"elements\":[{\"type\":\"mrkdwn\",\"text\":\"<@U03FRG969C6>\"}]}]}" https://hooks.slack.com/services/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
   when: on_success
-  

@@ -53,7 +53,7 @@ docker-build-backend:
     - changes:
       - backend/**/*
   dependencies:
-    - build
+    - build-backend-code-job
 
 
 upload-backend-latest:

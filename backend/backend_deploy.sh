@@ -1,5 +1,6 @@
 #!/bin/bash
 set +e
+
 cat > .env <<EOF
 SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
 SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
@@ -11,6 +12,7 @@ docker login gitlab.praktikum-services.ru:5050 -u ${USER_REGISTRY} -p ${PASSWORD
 docker pull gitlab.praktikum-services.ru:5050/d.pashkov/sausage-store/sausage-backend:latest
 docker stop backend || true
 docker rm backend || true
+
 set -e
 docker run -d --name backend \
     --network=sausage_network \

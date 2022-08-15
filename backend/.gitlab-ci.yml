@@ -1,11 +1,6 @@
-cache:
-  paths:
-    - ${CI_PROJECT_DIR}/.m2/repository
-
 variables:
    VERSION: 1.0.${CI_PIPELINE_ID}
    MAVEN_REPO_PATH: ${CI_PROJECT_DIR}/.m2/repository
-   #JAVA_OPTS: -XX:MaxRAMPercentage=90 # для того, чтобы Maven не съел всю свободную оперативку
 
 include:
   - template: Security/SAST.gitlab-ci.yml
@@ -17,6 +12,26 @@ stages:
    - test
    - release
    - deploy
+
+
+build-backend-code-job:
+   stage: build
+   script:
+      - echo "ARTIFACT_JOB_ID=${CI_JOB_ID}" > CI_JOB_ID.txt
+      - cd backend
+      - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH}
+      - cd .. 
+      - mkdir sausage-store-${VERSION}
+      - mv backend/target/sausage-store-${VERSION}.jar sausage-store-${VERSION}/sausage-store-${VERSION}.jar
+   artifacts:
+    paths:
+      - ${CI_PROJECT_DIR}/.m2/
+      - sausage-store-${VERSION}/sausage-store-${VERSION}.jar 
+    reports:
+      dotenv: CI_JOB_ID.txt
+   rules: # rules и only в данных случаях взаимозаменяемы
+      - changes:
+           - backend/**/*
 
 
 build-backend:

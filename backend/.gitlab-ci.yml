@@ -70,6 +70,7 @@ upload-backend-latest:
     - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend:latest
     - docker push $CI_REGISTRY_IMAGE/sausage-backend:latest
 
+
 deploy-backend:
   stage: deploy
   image: alpine:3.15.0

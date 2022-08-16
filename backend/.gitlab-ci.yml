@@ -133,6 +133,7 @@ sonarqube-backend-sast:
   rules:
     - changes:
       - backend/**/*
+  when: manual
 
 
 release:

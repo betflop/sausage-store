@@ -112,6 +112,7 @@ spotbugs-sast:
     - build-backend-code-job
   variables:
     COMPILE: "false"
+  when: manual
 
 
 sonarqube-backend-sast:
@@ -130,10 +131,10 @@ sonarqube-backend-sast:
       -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACK}
       -Dsonar.host.url=${SONARQUBE_URL}
       -Dsonar.login=${SONAR_LOGIN}
+  when: manual
   rules:
     - changes:
       - backend/**/*
-  when: manual
 
 
 release:

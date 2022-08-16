@@ -23,6 +23,4 @@ docker run -d --name backend \
     --restart always \
     --pull always \
     --env-file .env \
-    -p 8888:8888 \
-    -p 8889:8080 \
     $CI_REGISTRY_IMAGE/sausage-backend:latest

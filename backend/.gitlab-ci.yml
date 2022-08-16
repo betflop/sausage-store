@@ -106,16 +106,15 @@ deploy-backend:
       /bin/bash -s " < ./backend/backend_deploy.sh 
       
 
-spotbugs-sast:
+.spotbugs-sast:
   stage: test
   dependencies:
     - build-backend-code-job
   variables:
     COMPILE: "false"
-  when: manual
 
 
-sonarqube-backend-sast:
+.sonarqube-backend-sast:
   stage: test
   image: maven:3.8-openjdk-16 # тот самый docker-образ, о котором мы все узнаем в будущем
   cache:
@@ -131,7 +130,6 @@ sonarqube-backend-sast:
       -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACK}
       -Dsonar.host.url=${SONARQUBE_URL}
       -Dsonar.login=${SONAR_LOGIN}
-  when: manual
   rules:
     - changes:
       - backend/**/*

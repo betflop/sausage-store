@@ -12,7 +12,7 @@ include:
 stages:
    - build
    - docker
-   - test
+#   - test
    - release
    - docker-release
    - deploy

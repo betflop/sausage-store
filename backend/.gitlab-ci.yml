@@ -11,7 +11,7 @@ include:
 
 stages:
    - build
-   - docker
+   - docker-build
    - test
    - release
    - docker-release
@@ -39,7 +39,7 @@ build-backend-code-job:
 
 
 docker-build-backend:
-  stage: docker
+  stage: docker-build
   image: docker:20.10.12-dind-rootless
   before_script:
     - until docker info; do sleep 1; done
@@ -106,15 +106,15 @@ deploy-backend:
       /bin/bash -s " < ./backend/backend_deploy.sh 
       
 
-.spotbugs-sast:
+spotbugs-sast:
   stage: test
   dependencies:
     - build-backend-code-job
-  variables:
-    COMPILE: "false"
+#  variables:
+#    COMPILE: "false"
 
 
-.sonarqube-backend-sast:
+sonarqube-backend-sast:
   stage: test
   image: maven:3.8-openjdk-16 # тот самый docker-образ, о котором мы все узнаем в будущем
   cache:

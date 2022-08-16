@@ -106,13 +106,12 @@ deploy-backend:
       /bin/bash -s " < ./backend/backend_deploy.sh 
       
 
-spotbugs-sast:
+.spotbugs-sast:
   stage: test
   dependencies:
     - build-backend-code-job
 #  variables:
 #    COMPILE: "false"
-  when: manual
 
 
 .sonarqube-backend-sast:

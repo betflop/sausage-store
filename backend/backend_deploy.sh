@@ -20,4 +20,5 @@ docker run -d --name backend \
     --restart always \
     --pull always \
     --env-file .env \
+    -p 8888:8888 \
     ${CI_REGISTRY}/d.pashkov/sausage-store/sausage-backend:latest

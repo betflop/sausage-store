@@ -23,7 +23,8 @@ RUN keytool -importcert -file YandexInternalRootCA.crt \
     && adduser -S -s /bin/false -G jaruser jaruser -D -H \
     && apk add --no-cache dumb-init==1.2.5-r0
 # create directory for reports
-RUN mkdir -p ./log/reports && RUN chown -R jaruser:jaruser /app/log/reports
+RUN mkdir -p ./log/reports
+RUN chown -R jaruser:jaruser /app/log/reports
 COPY --chown=jaruser:jaruser \
      --from=builder /usr/src/app/target/sausage-store-${VERSION}.jar ./sausage-store.jar
 EXPOSE 8080

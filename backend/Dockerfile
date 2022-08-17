@@ -29,7 +29,7 @@ RUN keytool -importcert -file YandexInternalRootCA.crt \
 RUN mkdir -p ./log/reports && RUN chown -R jaruser:jaruser /app/log/reports
 COPY --chown=jaruser:jaruser \
      --from=builder /usr/src/app/target/sausage-store-${VERSION}.jar ./sausage-store.jar
-EXPOSE 8888
+EXPOSE 8080
 # приложение будет запускаться под пользователем jaruser
 USER jaruser
-ENTRYPOINT ["dumb-init", "java", "-jar", "-Dmyserver.bindPort=8888", "./sausage-store.jar"]
+ENTRYPOINT ["dumb-init", "java", "-jar", "-Dmyserver.bindPort=8080", "./sausage-store.jar"]

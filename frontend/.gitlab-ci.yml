@@ -4,7 +4,7 @@ variables:
 
 
 include:
-  - template: Security/SAST.gitlab-ci.yml
+#  - template: Security/SAST.gitlab-ci.yml
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
 
@@ -100,7 +100,7 @@ deploy-frontend:
       /bin/bash -s " < ./frontend/frontend_deploy.sh
       
 
-sonarqube-frontend-sast:
+.sonarqube-frontend-sast:
   stage: test
   image:
     name: sonarsource/sonar-scanner-cli:latest

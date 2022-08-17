@@ -5,7 +5,7 @@ variables:
 
 
 include:
-#  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
 
@@ -109,7 +109,7 @@ deploy-backend:
       /bin/bash -s " < ./backend/backend_deploy.sh 
       
 
-.spotbugs-sast:
+spotbugs-sast:
   stage: test
   dependencies:
     - build-backend-code-job
@@ -117,7 +117,7 @@ deploy-backend:
 #    COMPILE: "false"
 
 
-.sonarqube-backend-sast:
+sonarqube-backend-sast:
   stage: test
   image: maven:3.8-openjdk-16 # тот самый docker-образ, о котором мы все узнаем в будущем
   cache:

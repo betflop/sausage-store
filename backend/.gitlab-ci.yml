@@ -15,7 +15,6 @@ stages:
    - docker-build
    - test
    - release
-   - docker-release
    - deploy
 
 
@@ -60,19 +59,33 @@ docker-build-backend:
     - build-backend-code-job
 
 
-upload-backend-latest:
-  variables:
-    GIT_STRATEGY: none
-  image: docker:20.10.12-dind-rootless
-  stage: docker-release
-  before_script:
-    - until docker info; do sleep 1; done
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+spotbugs-sast:
+  stage: test
+  dependencies:
+    - build-backend-code-job
+#  variables:
+#    COMPILE: "false"
+
+
+sonarqube-backend-sast:
+  stage: test
+  image: maven:3.8-openjdk-16 # тот самый docker-образ, о котором мы все узнаем в будущем
+  cache:
+    key: ${CI_JOB_NAME}
+    paths:
+      - .sonar/cache
   script:
-    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
-    # если образ прошел проверки в CI (сканирование, тесты и т.д), то тегаем latest
-    - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend:latest
-    - docker push $CI_REGISTRY_IMAGE/sausage-backend:latest
+    - cd backend
+    - >
+      mvn verify sonar:sonar 
+      -Dversion.application=${VERSION} 
+      -Dsonar.qualitygate.wait=true 
+      -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACK}
+      -Dsonar.host.url=${SONARQUBE_URL}
+      -Dsonar.login=${SONAR_LOGIN}
+  rules:
+    - changes:
+      - backend/**/*
 
 
 deploy-backend:
@@ -109,35 +122,6 @@ deploy-backend:
       /bin/bash -s " < ./backend/backend_deploy.sh 
       
 
-spotbugs-sast:
-  stage: test
-  dependencies:
-    - build-backend-code-job
-#  variables:
-#    COMPILE: "false"
-
-
-sonarqube-backend-sast:
-  stage: test
-  image: maven:3.8-openjdk-16 # тот самый docker-образ, о котором мы все узнаем в будущем
-  cache:
-    key: ${CI_JOB_NAME}
-    paths:
-      - .sonar/cache
-  script:
-    - cd backend
-    - >
-      mvn verify sonar:sonar 
-      -Dversion.application=${VERSION} 
-      -Dsonar.qualitygate.wait=true 
-      -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACK}
-      -Dsonar.host.url=${SONARQUBE_URL}
-      -Dsonar.login=${SONAR_LOGIN}
-  rules:
-    - changes:
-      - backend/**/*
-
-
 release:
    stage: release
    script:
@@ -147,6 +131,21 @@ release:
       - changes:
            - backend/**/*
    #allow_failure: true
+
+
+upload-backend-latest:
+  variables:
+    GIT_STRATEGY: none
+  image: docker:20.10.12-dind-rootless
+  stage: release
+  before_script:
+    - until docker info; do sleep 1; done
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+    # если образ прошел проверки в CI (сканирование, тесты и т.д), то тегаем latest
+    - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend:latest
+    - docker push $CI_REGISTRY_IMAGE/sausage-backend:latest
 
 
 slack-message: # уведомляем в Slack

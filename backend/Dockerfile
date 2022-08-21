@@ -6,6 +6,7 @@ WORKDIR /usr/src/app
 COPY ./src ./src
 COPY *.xml ./
 # копируем CA-сертификат Яндекса в образ
+RUN apk --no-cache add curl
 RUN curl https://storage.yandexcloud.net/cloud-certs/CA.pem -o YandexInternalRootCA.crt \
     && mvn package -Dversion.application=${VERSION}
 

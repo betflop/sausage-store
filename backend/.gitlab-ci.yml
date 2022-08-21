@@ -109,6 +109,7 @@ deploy-backend:
     - ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
        export "VAULT_TOKEN=${VAULT_TOKEN}";
+       export "VAULT_URL=${VAULT_URL}";
        export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
        export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
        export "CI_REGISTRY=${CI_REGISTRY}";

@@ -2,6 +2,7 @@
 set +e
 
 cat > .env <<EOF
+VAULT_TOKEN=${VAULT_TOKEN}
 REPORT_PATH=/app/log/reports
 LOG_PATH=/app/log
 EOF

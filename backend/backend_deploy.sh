@@ -3,6 +3,7 @@ set +e
 cat > .env <<EOF
 VAULT_TOKEN=${VAULT_TOKEN}
 VAULT_URL=${VAULT_URL}
+TESTDB_PASSWORD=${TESTDB_PASSWORD}
 REPORT_PATH=/app/log/reports
 LOG_PATH=/app/log
 EOF

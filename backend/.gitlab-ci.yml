@@ -110,6 +110,7 @@ deploy-backend:
       "export "VERSION=${VERSION}";
        export "VAULT_TOKEN=${VAULT_TOKEN}";
        export "VAULT_URL=${VAULT_URL}";
+       export "TESTDB_PASSWORD=${TESTDB_PASSWORD}";
        export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
        export "CI_REGISTRY=${CI_REGISTRY}";
        export "CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}";

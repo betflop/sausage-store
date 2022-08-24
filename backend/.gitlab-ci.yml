@@ -108,13 +108,8 @@ deploy-backend:
   script:
     - ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
-       export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
-       export "SPRING_DATASOURCE_USERNAME=${PSQL_USER}";
-       export "SPRING_DATASOURCE_PASSWORD=${PSQL_PASSWORD}";
-       export "MONGO_HOST=${MONGO_HOST}";
-       export "MONGO_DATABASE=${MONGO_DATABASE}";
-       export "MONGO_USER=${MONGO_USER}";
-       export "MONGO_PASSWORD=${MONGO_PASSWORD}";
+       export "VAULT_TOKEN=${VAULT_TOKEN}";
+       export "VAULT_URL=${VAULT_URL}";
        export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
        export "CI_REGISTRY=${CI_REGISTRY}";
        export "CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}";

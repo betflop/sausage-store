@@ -35,7 +35,7 @@ services:
     networks:
       - sausage-store
 
-vault:
+  vault:
     image: vault
     container_name: vault
     environment:

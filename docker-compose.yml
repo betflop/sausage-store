@@ -45,6 +45,7 @@ services:
   vault:
     image: vault:1.11.2
     container_name: vault
+    restart: unless-stopped
     environment:
       VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN}
       VAULT_SERVER: "http://127.0.0.1:8200"
@@ -52,9 +53,16 @@ services:
     ports: 
       - 8200:8200
     cap_add:
-        - IPC_LOCK
+      - IPC_LOCK
     networks:
       - sausage-store
+    volumes:
+      - vault-data:/vault/data
+      - vault-logs:/vault/logs
 
 networks:
   sausage-store:
+
+volumes:
+  vault-data:
+  vault-logs:

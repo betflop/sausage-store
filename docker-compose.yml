@@ -36,12 +36,13 @@ services:
       - sausage-store
 
   vault:
-    image: vault
+    image: vault:1.11.2
     container_name: vault
     environment:
       VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN}
       VAULT_SERVER: "http://127.0.0.1:8200"
       VAULT_ADDR: "http://127.0.0.1:8200"
+      MONGO_DATA: ${MONGO_DATA}
     ports:
       - "8200:8200"
     networks:

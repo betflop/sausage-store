@@ -9,6 +9,7 @@ include:
 stages:
    - docker-build
    - release
+   - deploy
 
 docker-build-backend-report:
   stage: docker-build
@@ -28,6 +29,7 @@ docker-build-backend-report:
     - changes:
       - backend-report/**/*
 
+
 upload-backend-report:
   variables:
     GIT_STRATEGY: none
@@ -40,3 +42,26 @@ upload-backend-report:
     - docker pull $CI_REGISTRY_IMAGE/sausage-backend-report:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE/sausage-backend-report:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend-report:latest
     - docker push $CI_REGISTRY_IMAGE/sausage-backend-report:latest
+
+
+deploy-backend-report:
+  stage: deploy
+  image: alpine:3.15.0
+  before_script:
+    - apk add openssh-client bash
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh ${DEV_USER}@${DEV_HOST}
+      "export "VERSION=${VERSION}";
+       export "VAULT_TOKEN=${VAULT_TOKEN}";
+       export "VAULT_URL=${VAULT_URL}";
+       export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
+       export "CI_REGISTRY=${CI_REGISTRY}";
+       export "CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}";
+       export "CI_REGISTRY_USER=${CI_REGISTRY_USER}";
+      /bin/bash -s " < ./backend/backend-report_deploy.sh

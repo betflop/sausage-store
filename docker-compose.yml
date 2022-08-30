@@ -3,6 +3,9 @@ services:
 
   backend:
     image: $CI_REGISTRY_IMAGE/sausage-backend:latest
+    build:
+      context: backend
+      dockerfile: Dockerfile
     container_name: sausage-store-backend
     restart: always
     environment:
@@ -17,6 +20,9 @@ services:
 
   backend-report:
     image: $CI_REGISTRY_IMAGE/sausage-backend-report:latest
+    build:
+      context: backend-report
+      dockerfile: Dockerfile
     container_name: sausage-store-backend-report
     restart: always
     environment:
@@ -26,6 +32,9 @@ services:
   
   frontend:
     image: $CI_REGISTRY_IMAGE/sausage-frontend:latest
+    build:
+      context: frontend
+      dockerfile: Dockerfile
     container_name: sausage-store-frontend
     restart: always
     ports:

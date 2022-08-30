@@ -4,6 +4,7 @@ services:
   backend:
     image: $CI_REGISTRY_IMAGE/sausage-backend:latest
     container_name: sausage-store-backend
+    restart: always
     environment:
       SPRING_DATASOURCE_USERNAME: ${PSQL_USER}
       SPRING_DATASOURCE_URL: ${PSQL_DATASOURCE}
@@ -17,6 +18,7 @@ services:
   backend-report:
     image: $CI_REGISTRY_IMAGE/sausage-backend-report:latest
     container_name: sausage-store-backend-report
+    restart: always
     environment:
       SPRING_CLOUD_VAULT_TOKEN: ${VAULT_TOKEN}
     networks:
@@ -25,6 +27,7 @@ services:
   frontend:
     image: $CI_REGISTRY_IMAGE/sausage-frontend:latest
     container_name: sausage-store-frontend
+    restart: always
     ports:
       - "80:80"
     networks:
@@ -33,6 +36,7 @@ services:
   vault:
     image: vault
     container_name: vault
+    restart: always
     environment:
       VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN}
       VAULT_SERVER: "http://127.0.0.1:8200"

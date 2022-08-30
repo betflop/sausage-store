@@ -63,7 +63,6 @@ deploy-docker-compose:
        export "CI_REGISTRY_USER=${CI_REGISTRY_USER}";
       /bin/bash -s " < ./deploy.sh
 
-
 slack-message: # уведомляем в Slack
   stage: .post
   script:

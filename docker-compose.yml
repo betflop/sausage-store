@@ -45,7 +45,6 @@ services:
   vault:
     image: vault
     container_name: vault
-    restart: always
     environment:
       VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN}
       VAULT_SERVER: "http://127.0.0.1:8200"

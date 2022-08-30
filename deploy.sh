@@ -2,7 +2,7 @@
 set -e
 
 docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-docker-compose down --rmi local
+docker-compose down --rmi local || true
 docker-compose up -d vault
 
 cat <<EOF | docker exec -i vault ash

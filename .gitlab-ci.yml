@@ -51,7 +51,6 @@ deploy-docker-compose:
     - scp docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/
     - ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
-       #export "MONGO_DATA=${MONGO_DATA}";
        export "MONGO_DATA=mongodb://sudmedru:Testusr1234@rc1b-k6kxnzzdzwda1z36.mdb.yandexcloud.net:27018/sudmedru?tls=true&replicaSet=rs01";
        export "PSQL_DATASOURCE=${PSQL_DATASOURCE}";
        export "PSQL_USER=${PSQL_USER}";

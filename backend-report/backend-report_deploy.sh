@@ -19,4 +19,5 @@ docker run -d --name backend-report \
     --restart always \
     --pull always \
     --env-file .env \
+    -p 8081:8081 \
     $CI_REGISTRY_IMAGE/sausage-backend-report:latest

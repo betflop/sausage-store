@@ -35,10 +35,10 @@ backend-report:
 deploy-docker-compose:
   stage: deploy
   image: alpine:3.15.0
-  # деплой по кнопке
-  rules:
-    - if: $CI_COMMIT_BRANCH
-      when: manual
+  #деплой по кнопке
+  #rules:
+  #  - if: $CI_COMMIT_BRANCH
+  #    when: manual
   before_script:
     - apk add openssh-client bash
     - eval $(ssh-agent -s)
@@ -51,20 +51,16 @@ deploy-docker-compose:
     - scp docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/
     - ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
-       export "PSQL_HOST=${PSQL_HOST}";
        export "PSQL_DATASOURCE=${PSQL_DATASOURCE}";
-       export "PSQL_DB=${PSQL_DB}";
        export "PSQL_USER=${PSQL_USER}";
        export "PSQL_PASSWORD=${PSQL_PASSWORD}";
        export "MONGO_DATA=${MONGO_DATA}";
        export "VAULT_TOKEN=${VAULT_TOKEN}";
        export "VAULT_URL=${VAULT_URL}";
-       export "SPRING_FLYWAY_ENABLED=false";
        export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
        export "CI_REGISTRY=${CI_REGISTRY}";
        export "CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}";
        export "CI_REGISTRY_USER=${CI_REGISTRY_USER}";
-       export "REPORT_PATH=/app/log/reports";
       /bin/bash -s " < ./deploy.sh
 
 

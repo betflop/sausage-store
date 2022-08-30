@@ -51,10 +51,10 @@ deploy-docker-compose:
     - scp docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/
     - ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
+       export "MONGO_DATA=${MONGO_DATA}";
        export "PSQL_DATASOURCE=${PSQL_DATASOURCE}";
        export "PSQL_USER=${PSQL_USER}";
        export "PSQL_PASSWORD=${PSQL_PASSWORD}";
-       export "MONGO_DATA=${MONGO_DATA}";
        export "VAULT_TOKEN=${VAULT_TOKEN}";
        export "VAULT_URL=${VAULT_URL}";
        export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";

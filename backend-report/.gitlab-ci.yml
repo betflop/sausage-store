@@ -64,4 +64,4 @@ deploy-backend-report:
        export "CI_REGISTRY=${CI_REGISTRY}";
        export "CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}";
        export "CI_REGISTRY_USER=${CI_REGISTRY_USER}";
-      /bin/bash -s " < ./backend/backend-report_deploy.sh
+      /bin/bash -s " < ./backend-report/backend-report_deploy.sh

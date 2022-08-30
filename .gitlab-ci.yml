@@ -52,6 +52,7 @@ deploy-docker-compose:
     - ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
        export "PSQL_HOST=${PSQL_HOST}";
+       export "PSQL_DATASOURCE=${PSQL_DATASOURCE}";
        export "PSQL_DB=${PSQL_DB}";
        export "PSQL_USER=${PSQL_USER}";
        export "PSQL_PASSWORD=${PSQL_PASSWORD}";

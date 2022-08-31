@@ -4,7 +4,7 @@ VAULT_TOKEN=${VAULT_TOKEN}
 PSQL_DATASOURCE=${PSQL_DATASOURCE}
 PSQL_USER=${PSQL_USER}
 PSQL_PASSWORD=${PSQL_PASSWORD}
-MONGO_DATA='mongodb://sudmedru:Testusr1234@rc1b-k6kxnzzdzwda1z36.mdb.yandexcloud.net:27018/sudmedru?tls=true&replicaSet=rs01'
+MONGO_DATA=${MONGO_DATA}
 
 docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
 docker-compose down --rmi local || true

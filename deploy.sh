@@ -17,7 +17,7 @@ set -e
 
 docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
 docker-compose down --rmi local || true
-docker-compose up -d vault --env-file ./.env.vault
+docker-compose up -d --env-file ./.env.vault vault
 
 cat <<EOF | docker exec -i vault ash
   sleep 20;

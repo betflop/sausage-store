@@ -28,3 +28,4 @@ cat <<EOF | docker exec -i vault ash
 EOF
 
 docker-compose up -d
+ 

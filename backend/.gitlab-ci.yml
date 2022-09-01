@@ -31,7 +31,7 @@ build-backend-code-job:
       - sausage-store-${VERSION}/sausage-store-${VERSION}.jar 
     reports:
       dotenv: CI_JOB_ID.txt
-   rules: # rules и only в данных случаях взаимозаменяемы
+   rules:
       - changes:
            - backend/**/*
 

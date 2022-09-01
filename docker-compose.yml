@@ -15,9 +15,9 @@ services:
 
   backend-report:
     image: $CI_REGISTRY_IMAGE/sausage-backend-report:latest
-    #build:
-    #  context: backend-report
-    #  dockerfile: Dockerfile
+    build:
+      context: backend-report
+      dockerfile: Dockerfile
     container_name: sausage-store-backend-report
     restart: always
     environment:

@@ -13,6 +13,15 @@
     <version>${version.application}</version>
     <name>sausage-store-report</name>
     <description>Report for sausage-store</description>
+
+    <distributionManagement>
+        <repository>
+            <id>sausage-store-report</id>
+            <name>sausage-store-report</name>
+            <url>${env.NEXUS_REPO_URL}/repository/sausage-store-pashkov-dmitriy-backend-report/</url>
+        </repository>
+    </distributionManagement>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

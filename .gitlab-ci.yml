@@ -62,7 +62,7 @@ deploy-with-vault:
     - if: '$CI_COMMIT_BRANCH != null'
       when: never
     - if: '$CI_COMMIT_BRANCH == null'
-      when: manual
+      when: never
 
 slack-message: # уведомляем в Slack
   stage: .post

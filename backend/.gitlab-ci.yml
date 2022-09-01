@@ -2,6 +2,7 @@ variables:
    SAST_JAVA_VERSION: 17
    VERSION: 1.0.${CI_PIPELINE_ID}
    MAVEN_REPO_PATH: ${CI_PROJECT_DIR}/.m2/repository
+   SAST_EXCLUDED_ANALYZERS: "eslint,nodejs-scan"
 
 include:
   - template: Security/SAST.gitlab-ci.yml
@@ -13,6 +14,7 @@ stages:
    - docker-build
    - test
    - release
+   - deploy
 
 build-backend-code-job:
    stage: build
@@ -62,7 +64,7 @@ spotbugs-sast:
 
 sonarqube-backend-sast:
   stage: test
-  image: maven:3.8-openjdk-16 # тот самый docker-образ, о котором мы все узнаем в будущем
+  image: maven:3.8-openjdk-16
   cache:
     key: ${CI_JOB_NAME}
     paths:
@@ -70,12 +72,14 @@ sonarqube-backend-sast:
   script:
     - cd backend
     - >
-      mvn verify sonar:sonar 
-      -Dversion.application=${VERSION} 
-      -Dsonar.qualitygate.wait=true 
+      mvn verify sonar:sonar
+      -Dversion.application=${VERSION}
+      -Dsonar.qualitygate.wait=true
       -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACK}
       -Dsonar.host.url=${SONARQUBE_URL}
       -Dsonar.login=${SONAR_LOGIN}
+  dependencies:
+    - build-backend-code-job
   rules:
     - changes:
       - backend/**/*
@@ -100,6 +104,21 @@ upload-backend-latest:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
-    # если образ прошел проверки в CI (сканирование, тесты и т.д), то тегаем latest
     - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend:latest
     - docker push $CI_REGISTRY_IMAGE/sausage-backend:latest
+
+deploy-backend:
+  stage: deploy
+  image: alpine:3.15.0
+  before_script:
+    - apk add openssh-client bash docker docker-compose
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
+    - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d --force-recreate backend

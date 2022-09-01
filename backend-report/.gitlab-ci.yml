@@ -5,7 +5,7 @@ variables:
    SAST_EXCLUDED_ANALYZERS: "eslint,nodejs-scan"
 
 include:
-  - template: Security/SAST.gitlab-ci.yml
+#  - template: Security/SAST.gitlab-ci.yml
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
 
@@ -126,4 +126,3 @@ deploy-backend-report:
     - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d --force-recreate backend-report
- 

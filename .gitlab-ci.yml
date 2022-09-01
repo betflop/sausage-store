@@ -28,19 +28,15 @@ backend-report:
     include:
       - "/backend-report/.gitlab-ci.yml"
     strategy: depend
-  only:
-    changes:  # как только происходит изменение в папке backend-report, запускается дочерний пайплайн, который лежит в этой папке
-      - backend-report/**/*
+#  only:
+#    changes:  # как только происходит изменение в папке backend-report, запускается дочерний пайплайн, который лежит в этой папке
+#      - backend-report/**/*
 
 deploy-docker-compose:
   stage: deploy
   image: alpine:3.15.0
-  #деплой по кнопке
-  #rules:
-  #  - if: $CI_COMMIT_BRANCH
-  #    when: manual
   before_script:
-    - apk add openssh-client bash
+    - apk add openssh-client bash docker docker-compose
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
@@ -67,6 +63,8 @@ slack-message: # уведомляем в Slack
   stage: .post
   script:
     - echo "Send notify to Slack"
+    - echo "${VERSION}"
     - >
       curl -X POST -H 'Content-type: application/json' --data '{"text":"Вышла новая версия сосисочной '${VERSION}'."}' https://hooks.slack.com/services/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
-  when: on_success
+#  when: on_success
+  when: manual

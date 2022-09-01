@@ -73,4 +73,6 @@ slack-message: # уведомляем в Slack
     - >
       curl -X POST -H 'Content-type: application/json' --data '{"text":"Вышла новая версия сосисочной '${VERSION}'."}' https://hooks.slack.com/services/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
 #  when: manual
-when: never
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "microservices"'
+      when: never

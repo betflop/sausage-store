@@ -11,8 +11,8 @@ include:
 
 stages:
    - build
-   - docker-build
    - test
+   - dockerize
    - release
    - deploy
 
@@ -34,26 +34,6 @@ build-backend-code-job:
    rules: # rules и only в данных случаях взаимозаменяемы
       - changes:
            - backend/**/*
-
-docker-build-backend:
-  stage: docker-build
-  image: docker:20.10.12-dind-rootless
-  before_script:
-    - until docker info; do sleep 1; done
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - cd backend
-    - >
-      docker build
-      --build-arg VERSION=$VERSION
-      --tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
-      .
-    - docker push $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
-  rules:
-    - changes:
-      - backend/**/*
-  dependencies:
-    - build-backend-code-job
 
 spotbugs-sast:
   stage: test
@@ -83,6 +63,26 @@ sonarqube-backend-sast:
   rules:
     - changes:
       - backend/**/*
+
+dockerize-backend:
+  stage: dockerize
+  image: docker:20.10.12-dind-rootless
+  before_script:
+    - until docker info; do sleep 1; done
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - cd backend
+    - >
+      docker build
+      --build-arg VERSION=$VERSION
+      --tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+      .
+    - docker push $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+  rules:
+    - changes:
+      - backend/**/*
+  dependencies:
+    - build-backend-code-job
 
 release:
    stage: release
@@ -121,4 +121,6 @@ deploy-backend:
     - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
     - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d --force-recreate backend
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate backend

@@ -18,7 +18,7 @@
         <repository>
             <id>sausage-store-report</id>
             <name>sausage-store-report</name>
-            <url>${env.NEXUS_REPO_URL}/repository/sausage-store-pashkov-dmitriy-backend-report/</url>
+            <url>${env.NEXUS_REPO_URL}/sausage-store-pashkov-dmitriy-backend-report/</url>
         </repository>
     </distributionManagement>
 

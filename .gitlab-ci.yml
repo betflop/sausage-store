@@ -59,11 +59,8 @@ deploy-with-vault:
        export "CI_REGISTRY_USER=${CI_REGISTRY_USER}";
       /bin/bash -s " < ./deploy.sh
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: always
-    - if: '$CI_COMMIT_BRANCH == null'
-      when: never
-    - when: manual
+    - if: $CI_COMMIT_BRANCH
+      when: manual
 
 slack-message: # уведомляем в Slack
   stage: .post

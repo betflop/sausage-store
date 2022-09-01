@@ -42,6 +42,9 @@ upload-backend-report:
     - docker pull $CI_REGISTRY_IMAGE/sausage-backend-report:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE/sausage-backend-report:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend-report:latest
     - docker push $CI_REGISTRY_IMAGE/sausage-backend-report:latest
+  rules:
+    - changes:
+      - backend-report/**/*
 
 
 deploy-backend-report:
@@ -55,13 +58,7 @@ deploy-backend-report:
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
+    - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
+    - docker --context remote login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
   script:
-    - ssh ${DEV_USER}@${DEV_HOST}
-      "export "VERSION=${VERSION}";
-       export "VAULT_TOKEN=${VAULT_TOKEN}";
-       export "VAULT_URL=${VAULT_URL}";
-       export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
-       export "CI_REGISTRY=${CI_REGISTRY}";
-       export "CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}";
-       export "CI_REGISTRY_USER=${CI_REGISTRY_USER}";
-      /bin/bash -s " < ./backend-report/backend-report_deploy.sh
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d --force-recreate backend-report

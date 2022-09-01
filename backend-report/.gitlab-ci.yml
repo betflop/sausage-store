@@ -17,7 +17,7 @@ stages:
    - release
    - deploy
 
-build:
+build-code-job:
   stage: build
   script:
     - echo "ARTIFACT_JOB_ID=${CI_JOB_ID}" > CI_JOB_ID.txt
@@ -38,7 +38,7 @@ build:
 
 spotbugs-sast:
   dependencies:
-    - build
+    - build-code-job
   variables:
     COMPILE: "false"
 
@@ -55,7 +55,7 @@ sonar-scan-backend-report:
       mvn verify sonar:sonar 
       -Dversion.application=${VERSION} 
       -Dsonar.qualitygate.wait=true 
-      -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACK}
+      -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACK_REPORT}
       -Dsonar.host.url=${SONARQUBE_URL}
       -Dsonar.login=${SONAR_LOGIN}
   rules:
@@ -63,7 +63,7 @@ sonar-scan-backend-report:
       - backend-report/**/*
   allow_failure: true
   dependencies:
-    - build
+    - build-code-job
 
 release:
    stage: release
@@ -93,7 +93,7 @@ docker-build-backend-report:
     - changes:
       - backend-report/**/*
   dependencies:
-    - build
+    - build-code-job
 
 upload-backend-report:
   variables:
@@ -110,7 +110,6 @@ upload-backend-report:
   rules:
     - changes:
       - backend-report/**/*
-
 
 deploy-backend-report:
   stage: deploy

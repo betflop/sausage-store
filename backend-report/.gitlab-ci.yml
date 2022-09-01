@@ -126,4 +126,3 @@ deploy-backend-report:
     - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d --force-recreate backend-report
- 

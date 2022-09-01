@@ -9,6 +9,6 @@ EOF
 
 docker network create -d bridge sausage_network || true
 docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-docker pull $CI_REGISTRY_IMAGE/sausage-backend-report:latest
+#docker pull $CI_REGISTRY_IMAGE/sausage-backend-report:latest
 docker-compose pull
-docker-compose --env-file .env up -d backend-report
+docker-compose --env-file .env up -d sausage-backend-report

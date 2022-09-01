@@ -12,8 +12,8 @@ include:
 stages:
    - build
    - docker-build
-   - test
-   - sonar
+#   - test
+#   - sonar
    - release
    - deploy
 

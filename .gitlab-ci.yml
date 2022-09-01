@@ -32,7 +32,7 @@ backend-report:
     changes:  # как только происходит изменение в папке backend-report, запускается дочерний пайплайн, который лежит в этой папке
       - backend-report/**/*
 
-deploy-vault:
+deploy-with-vault:
   stage: deploy
   image: alpine:3.15.0
   before_script:

@@ -12,6 +12,7 @@ stages:
    - docker-build
    - test
    - release
+   - deploy
 
 build-frontend-code-job:
   stage: build
@@ -85,7 +86,6 @@ upload-frontend-release:
      changes:
      - frontend/**/*
 
-
 upload-frontend-latest:
   variables:
     GIT_STRATEGY: none
@@ -99,3 +99,23 @@ upload-frontend-latest:
     # если образ прошел проверки в CI (сканирование, тесты и т.д), то тегаем latest
     - docker tag $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-frontend:latest
     - docker push $CI_REGISTRY_IMAGE/sausage-frontend:latest
+rules:
+    - changes:
+      - frontend/**/*
+
+deploy-frontend:
+  stage: deploy
+  image: alpine:3.15.0
+  before_script:
+    - apk add openssh-client bash docker docker-compose
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
+    - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force frontend
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate --pull frontend

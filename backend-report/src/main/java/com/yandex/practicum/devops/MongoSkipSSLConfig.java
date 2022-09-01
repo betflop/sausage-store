@@ -48,7 +48,7 @@ public class MongoSkipSSLConfig {
             sc = SSLContext.getInstance("TLSv1.2");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            //return null;
+            return null;
         }
 
         try {

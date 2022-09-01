@@ -11,8 +11,8 @@ include:
 
 stages:
    - build
-   - docker-build
    - test
+   - dockerize
    - release
    - deploy
 
@@ -43,7 +43,7 @@ spotbugs-sast:
 
 sonar-scan-backend-report:
   stage: test
-  image: maven:3.8.4-openjdk-17
+  image: maven:3.8-openjdk-16
   cache:
     key: ${CI_JOB_NAME}
     paths:
@@ -74,8 +74,8 @@ release:
            - backend-report/**/*
    #allow_failure: true
 
-docker-build-backend-report:
-  stage: docker-build
+dockerize-backend-report:
+  stage: dockerize
   image: docker:20.10.12-dind-rootless
   before_script:
     - until docker info; do sleep 1; done
@@ -124,4 +124,6 @@ deploy-backend-report:
     - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
     - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d --force-recreate backend-report
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend-report
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-report
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate backend-report

@@ -59,6 +59,8 @@ deploy-with-vault:
        export "CI_REGISTRY_USER=${CI_REGISTRY_USER}";
       /bin/bash -s " < ./deploy.sh
   rules:
+    - if: '$CI_COMMIT_BRANCH == null'
+      when: never
     - if: $CI_COMMIT_BRANCH
       when: manual
 

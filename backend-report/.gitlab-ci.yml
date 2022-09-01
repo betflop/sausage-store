@@ -36,34 +36,34 @@ build-code-job:
     - changes:
       - backend-report/**/*
 
-spotbugs-sast:
-  dependencies:
-    - build-code-job
-  variables:
-    COMPILE: "false"
+#spotbugs-sast:
+#  dependencies:
+#    - build-code-job
+#  variables:
+#    COMPILE: "false"
 
-sonar-scan-backend-report:
-  stage: test
-  image: maven:3.8.4-openjdk-17
-  cache:
-    key: ${CI_JOB_NAME}
-    paths:
-      - .sonar/cache
-  script:
-    - cd backend-report
-    - >
-      mvn verify sonar:sonar 
-      -Dversion.application=${VERSION} 
-      -Dsonar.qualitygate.wait=true 
-      -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACK_REPORT}
-      -Dsonar.host.url=${SONARQUBE_URL}
-      -Dsonar.login=${SONAR_LOGIN}
-  rules:
-    - changes:
-      - backend-report/**/*
-  allow_failure: true
-  dependencies:
-    - build-code-job
+#sonar-scan-backend-report:
+#  stage: test
+#  image: maven:3.8.4-openjdk-17
+#  cache:
+#    key: ${CI_JOB_NAME}
+#    paths:
+#      - .sonar/cache
+#  script:
+#    - cd backend-report
+#    - >
+#      mvn verify sonar:sonar 
+#      -Dversion.application=${VERSION} 
+#      -Dsonar.qualitygate.wait=true 
+#      -Dsonar.projectKey=${SONAR_PROJECT_KEY_BACK_REPORT}
+#      -Dsonar.host.url=${SONARQUBE_URL}
+#      -Dsonar.login=${SONAR_LOGIN}
+#  rules:
+#    - changes:
+#      - backend-report/**/*
+#  allow_failure: true
+#  dependencies:
+#    - build-code-job
 
 release:
    stage: release

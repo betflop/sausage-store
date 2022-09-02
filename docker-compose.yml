@@ -1,0 +1,48 @@
+version: "3.3"
+services:
+
+  backend:
+    image: $CI_REGISTRY_IMAGE/sausage-backend:latest
+    container_name: backend
+    restart: always
+    environment:
+      VAULT_TOKEN: ${VAULT_TOKEN}
+      VAULT_URL: ${VAULT_URL}
+      REPORT_PATH: /app/log/reports
+      LOG_PATH: /app/log
+    networks:
+      - sausage-store
+
+  backend-report:
+    image: $CI_REGISTRY_IMAGE/sausage-backend-report:latest
+    container_name: sausage-store-backend-report
+    restart: always
+    environment:
+      VAULT_TOKEN: ${VAULT_TOKEN}
+      VAULT_URL: ${VAULT_URL}
+    networks:
+      - sausage-store
+  
+  frontend:
+    image: $CI_REGISTRY_IMAGE/sausage-frontend:latest
+    container_name: frontend
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - sausage-store
+
+  vault:
+    image: vault:1.11.2
+    container_name: vault
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN}
+      VAULT_SERVER: "http://127.0.0.1:8200"
+      VAULT_ADDR: "http://127.0.0.1:8200"
+    ports:
+      - "8200:8200"
+    networks:
+      - sausage-store
+
+networks:
+  sausage-store:

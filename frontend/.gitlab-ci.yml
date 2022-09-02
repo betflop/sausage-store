@@ -61,6 +61,7 @@ dockerize-frontend:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
+    - cp -r sausage-store-${VERSION}/public_html frontend/
     - cd frontend
     - >
       docker build

@@ -10,6 +10,7 @@ services:
       VAULT_URL: ${VAULT_URL}
       REPORT_PATH: /app/log/reports
       LOG_PATH: /app/log
+      VIRTUAL_HOST: "backend"
     networks:
       - sausage-store
 
@@ -29,6 +30,10 @@ services:
     restart: always
     ports:
       - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    environment:
+      DEFAULT_HOST: "backend"
     networks:
       - sausage-store
 

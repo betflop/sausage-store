@@ -75,7 +75,14 @@ deploy-certbot:
   script:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach certbot
   rules:
-    - when: always
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: '$CI_COMMIT_BRANCH == null'
+      when: never
+    - if: '$CI_COMMIT_BRANCH != null'
+      when: never
 
 slack-message:
   stage: .post

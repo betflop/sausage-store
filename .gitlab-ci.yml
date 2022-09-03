@@ -57,7 +57,7 @@ deploy-vault:
     - if: '$CI_COMMIT_BRANCH == null'
       when: never
     - if: '$CI_COMMIT_BRANCH != null'
-      when: never
+      when: manual
     - when: always
 
 slack-message:

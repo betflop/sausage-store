@@ -125,7 +125,7 @@ deploy-backend:
   script:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend
 #    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} down
-    -docker-compose rm --stop --force vault
+    - docker-compose rm --stop --force vault
     - docker stop vault
     - docker rm --force vault
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend

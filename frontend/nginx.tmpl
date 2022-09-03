@@ -1,26 +1,42 @@
 {{ range $host, $containers := groupBy $ "Env.VIRTUAL_HOST" }}
 upstream {{ $host }} {
-
 {{ range $index, $value := $containers }}
     {{ with $address := index $value.Addresses 0 }}
     server {{ $value.Hostname }}:{{ $address.Port }};
     {{ end }}
 {{ end }}
-
 }
 
 server {
-
   listen 80;
+  location / {
+    root   /usr/share/nginx/html;
+    index  index.html;
+    try_files $uri $uri/ /index.html;
+  }
+  location /api {
+      proxy_pass http://{{ $host }};
+  }
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl ipv6only=on;
+  ssl_certificate /etc/letsencrypt/live/pashkov.hopto.org/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/pashkov.hopto.org/privkey.pem;
+  ssl_stapling on;
+  add_header Strict-Transport-Security "max-age=63072000;";
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_timeout 10m;
 
   location / {
     root   /usr/share/nginx/html;
     index  index.html;
     try_files $uri $uri/ /index.html;
   }
-
   location /api {
-      proxy_pass http://{{ $host }};
+    proxy_pass http://{{ $host }};
   }
 }
+
 {{ end }}

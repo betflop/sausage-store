@@ -34,11 +34,25 @@ services:
       - "80:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - web-root:/usr/share/nginx/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
     environment:
       DEFAULT_HOST: "backend"
       VIRTUAL_PORT: "8080"
     networks:
       - sausage-store
+  
+  certbot:
+    image: certbot/certbot:1.7.0
+    container_name: certbot
+    volumes:
+      - web-root:/usr/share/nginx/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - frontend
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --force-renewal -d ${CERTBOT_DOMAIN} -d www.${CERTBOT_DOMAIN}
 
   vault:
     image: vault:1.11.2
@@ -54,3 +68,8 @@ services:
 
 networks:
   sausage-store:
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:

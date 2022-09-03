@@ -3,7 +3,7 @@ services:
 
   backend:
     image: $CI_REGISTRY_IMAGE/sausage-backend:latest
-    container_name: backend
+#    container_name: backend
     restart: always
     environment:
       VAULT_TOKEN: ${VAULT_TOKEN}

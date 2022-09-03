@@ -18,7 +18,7 @@ services:
 
   backend-report:
     image: $CI_REGISTRY_IMAGE/sausage-backend-report:latest
-    container_name: sausage-store-backend-report
+    container_name: backend-report
     restart: always
     environment:
       VAULT_TOKEN: ${VAULT_TOKEN}

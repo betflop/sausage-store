@@ -43,22 +43,12 @@ deploy-vault:
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
+    - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
+    - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - scp docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/
-    - ssh ${DEV_USER}@${DEV_HOST}
-      "export "VERSION=${VERSION}";
-       export "MONGO_VAULT=${MONGO_VAULT}";
-       export "PSQL_DATASOURCE=${PSQL_DATASOURCE}";
-       export "PSQL_USER=${PSQL_USER}";
-       export "PSQL_PASSWORD=${PSQL_PASSWORD}";
-       export "VAULT_TOKEN=${VAULT_TOKEN}";
-       export "VAULT_URL=${VAULT_URL}";
-       export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
-       export "CI_REGISTRY=${CI_REGISTRY}";
-       export "CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}";
-       export "CI_REGISTRY_USER=${CI_REGISTRY_USER}";
-       export "BACKEND_REPLICAS=${BACKEND_REPLICAS}";
-      /bin/bash -s " < ./deploy.sh
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force vault
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} exec -i vault ash "sleep 10; vault login ${VAULT_TOKEN}; vault kv put secret/sausage-store spring.data.mongodb.uri="${MONGO_VAULT}" spring.datasource.username="${PSQL_USER}" spring.datasource.password="${PSQL_PASSWORD}" spring.datasource.url="${PSQL_DATASOURCE}"; exit"
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --scale backend=${BACKEND_REPLICAS} backend
   rules:
     - if: '$CI_COMMIT_BRANCH == null'
       when: never

@@ -67,3 +67,4 @@ slack-message:
     - >
       curl -X POST -H 'Content-type: application/json' --data '{"text":"Развернута новая версия сосисочной http://pashkov.hopto.org."}' https://hooks.slack.com/services/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
   when: on_success
+ 

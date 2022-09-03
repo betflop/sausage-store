@@ -9,14 +9,7 @@ upstream {{ $host }} {
 
 server {
   listen 80;
-  location / {
-    root   /usr/share/nginx/html;
-    index  index.html;
-    try_files $uri $uri/ /index.html;
-  }
-  location /api {
-      proxy_pass http://{{ $host }};
-  }
+  return 301 https://$host$request_uri;
 }
 
 server {

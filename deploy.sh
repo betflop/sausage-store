@@ -11,7 +11,7 @@ docker-compose rm --stop --force vault
 docker-compose up --detach vault
 
 cat <<EOF | docker exec -i vault ash
-  sleep 10;
+  sleep 15;
   vault login ${VAULT_TOKEN};
   vault kv put secret/sausage-store spring.data.mongodb.uri="${MONGO_VAULT}" spring.datasource.username="${PSQL_USER}" spring.datasource.password="${PSQL_PASSWORD}" spring.datasource.url="${PSQL_DATASOURCE}";
 EOF

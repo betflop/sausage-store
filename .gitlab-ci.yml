@@ -60,6 +60,24 @@ deploy-vault:
       when: manual
     - when: always
 
+deploy-certbot:
+  stage: deploy
+  image: alpine:3.15.0
+  before_script:
+    - apk add openssh-client bash docker docker-compose
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
+    - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach certbot
+  rules:
+    - when: always
+
 slack-message:
   stage: .post
   script:
@@ -67,4 +85,3 @@ slack-message:
     - >
       curl -X POST -H 'Content-type: application/json' --data '{"text":"Развернута новая версия сосисочной http://pashkov.hopto.org."}' https://hooks.slack.com/services/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
   when: on_success
- 

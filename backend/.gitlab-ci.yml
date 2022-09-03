@@ -125,4 +125,5 @@ deploy-backend:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate backend
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} down
+    - until docker info; do sleep 10; done
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --scale backend=${BACKEND_REPLICAS} --detach

@@ -11,8 +11,6 @@ services:
       REPORT_PATH: /app/log/reports
       LOG_PATH: /app/log
       VIRTUAL_HOST: "backend"
-    depends_on:
-      - vault
     networks:
       - sausage-store
 

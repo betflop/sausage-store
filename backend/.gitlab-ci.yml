@@ -41,6 +41,7 @@ spotbugs-sast:
     - build-backend-code-job
 #  variables:
 #    COMPILE: "false"
+  when: manual
 
 sonarqube-backend-sast:
   stage: test
@@ -63,6 +64,7 @@ sonarqube-backend-sast:
   rules:
     - changes:
       - backend/**/*
+  when: manual
 
 dockerize-backend:
   stage: dockerize

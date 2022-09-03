@@ -17,4 +17,4 @@ cat <<EOF | docker exec -i vault ash
 EOF
 
 #docker-compose up --detach
-docker-compose up --detach --scale backend=${BACKEND_REPLICAS}
+#docker-compose up --detach --scale backend=${BACKEND_REPLICAS}

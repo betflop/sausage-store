@@ -23,7 +23,7 @@ server {
   ssl_certificate_key /etc/letsencrypt/live/pashkov.hopto.org/privkey.pem;
   add_header Strict-Transport-Security "max-age=63072000;";
   ssl_protocols TLSv1.2 TLSv1.3;
-	ssl_prefer_server_ciphers on;
+  ssl_prefer_server_ciphers on;
   ssl_stapling on;
   proxy_cache frontend;
   proxy_cache_key $request_method$request_uri;

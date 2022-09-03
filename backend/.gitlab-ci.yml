@@ -41,7 +41,6 @@ spotbugs-sast:
     - build-backend-code-job
 #  variables:
 #    COMPILE: "false"
-  when: manual
 
 sonarqube-backend-sast:
   stage: test
@@ -64,7 +63,6 @@ sonarqube-backend-sast:
   rules:
     - changes:
       - backend/**/*
-  when: manual
 
 dockerize-backend:
   stage: dockerize
@@ -125,4 +123,3 @@ deploy-backend:
   script:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate --scale backend=${BACKEND_REPLICAS} backend

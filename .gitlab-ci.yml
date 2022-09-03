@@ -48,7 +48,7 @@ deploy-vault:
   script:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach vault
     - docker -H ssh://${DEV_USER}@${DEV_HOST} exec -i -e "VAULT_TOKEN=${VAULT_TOKEN}" vault ash -c "vault kv put secret/sausage-store spring.data.mongodb.uri=${MONGO_VAULT} spring.datasource.username=${PSQL_USER} spring.datasource.password=${PSQL_PASSWORD} spring.datasource.url=${PSQL_DATASOURCE}"
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --scale backend=${BACKEND_REPLICAS} backend
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --scale backend=${BACKEND_REPLICAS}
   rules:
     - if: '$CI_COMMIT_BRANCH == null'
       when: never

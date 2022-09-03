@@ -16,5 +16,4 @@ cat <<EOF | docker exec -i vault ash
   vault kv put secret/sausage-store spring.data.mongodb.uri="${MONGO_VAULT}" spring.datasource.username="${PSQL_USER}" spring.datasource.password="${PSQL_PASSWORD}" spring.datasource.url="${PSQL_DATASOURCE}";
 EOF
 
-#docker-compose up --detach
-#docker-compose up --detach --scale backend=${BACKEND_REPLICAS}
+docker-compose up --detach --scale backend=${BACKEND_REPLICAS}

@@ -53,6 +53,7 @@ sonarqube-frontend-sast:
   rules:
     - changes:
       - frontend/**/*
+  when: manual
 
 dockerize-frontend:
   stage: dockerize

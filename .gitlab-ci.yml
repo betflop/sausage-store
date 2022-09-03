@@ -47,7 +47,7 @@ deploy-vault:
     - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach vault
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} exec -i vault ash -c "sleep 10; vault login ${VAULT_TOKEN}; vault kv put secret/sausage-store spring.data.mongodb.uri="${MONGO_VAULT}" spring.datasource.username="${PSQL_USER}" spring.datasource.password="${PSQL_PASSWORD}" spring.datasource.url="${PSQL_DATASOURCE}";"
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} exec -i vault ash -c "vault login ${VAULT_TOKEN} && vault kv put secret/sausage-store spring.data.mongodb.uri="${MONGO_VAULT}" spring.datasource.username="${PSQL_USER}" spring.datasource.password="${PSQL_PASSWORD}" spring.datasource.url="${PSQL_DATASOURCE}""
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --scale backend=${BACKEND_REPLICAS} backend
   rules:
     - if: '$CI_COMMIT_BRANCH == null'

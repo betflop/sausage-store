@@ -5,7 +5,7 @@ variables:
    SAST_EXCLUDED_ANALYZERS: "nodejs-scan"
 
 include:
-#  - template: Security/SAST.gitlab-ci.yml
+  #- template: Security/SAST.gitlab-ci.yml
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
 

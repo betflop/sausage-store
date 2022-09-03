@@ -44,7 +44,7 @@ services:
       - sausage-store
   
   certbot:
-    image: certbot/certbot:1.7.0
+    image: certbot/certbot:v1.29.0
     container_name: certbot
     volumes:
       - web-root:/usr/share/nginx/html

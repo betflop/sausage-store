@@ -126,8 +126,8 @@ deploy-backend:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend
 #    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} down
     - docker-compose rm --stop --force vault
-    - docker stop vault
-    - docker rm --force vault
+    - docker stop vault || true
+    - docker rm --force vault || true
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate backend
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --scale backend=${BACKEND_REPLICAS} --detach

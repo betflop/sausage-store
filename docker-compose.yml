@@ -52,7 +52,7 @@ services:
       - certbot-var:/var/lib/letsencrypt
     depends_on:
       - frontend
-    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --force-renewal -d ${CERTBOT_DOMAIN} -d www.${CERTBOT_DOMAIN}
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --force-renewal -d ${CERTBOT_DOMAIN}
 
   vault:
     image: vault:1.11.2

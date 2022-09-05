@@ -1,16 +1,41 @@
 version: "3.3"
 services:
 
-  backend:
+  backend-blue:
     image: $CI_REGISTRY_IMAGE/sausage-backend:latest
-#    container_name: backend
+    container_name: backend-blue
     restart: always
     environment:
       VAULT_TOKEN: ${VAULT_TOKEN}
       VAULT_URL: ${VAULT_URL}
       REPORT_PATH: /app/log/reports
       LOG_PATH: /app/log
-      VIRTUAL_HOST: "backend"
+#      VIRTUAL_HOST: "backend"
+    healthcheck:
+      test: curl --fail -s http://localhost:8080/actuator/health
+      interval: 30s
+      start_period: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - sausage-store
+
+  backend-green:
+    image: $CI_REGISTRY_IMAGE/sausage-backend:latest
+    container_name: backend-green
+    restart: always
+    environment:
+      VAULT_TOKEN: ${VAULT_TOKEN}
+      VAULT_URL: ${VAULT_URL}
+      REPORT_PATH: /app/log/reports
+      LOG_PATH: /app/log
+#      VIRTUAL_HOST: "backend"
+    healthcheck:
+      test: curl --fail -s http://localhost:8080/actuator/health
+      interval: 30s
+      start_period: 30s
+      timeout: 10s
+      retries: 5
     networks:
       - sausage-store
 

@@ -11,8 +11,8 @@ frontend:
   only:
     changes:
       - frontend/**/*
-    except:
-      - schedules
+  except:
+    - schedules
 
 backend:
   stage: module-pipelines
@@ -23,8 +23,8 @@ backend:
   only:
     changes:
       - backend/**/*
-    except:
-      - schedules
+  except:
+    - schedules
 
 backend-report:
   stage: module-pipelines
@@ -35,8 +35,8 @@ backend-report:
   only:
     changes:
       - backend-report/**/*
-    except:
-      - schedules
+  except:
+    - schedules
 
 deploy-vault:
   stage: deploy

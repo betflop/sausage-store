@@ -124,18 +124,10 @@ deploy-backend:
 #    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend
 #    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend
 #    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate --scale backend=${BACKEND_REPLICAS} backend
-    - echo `docker ps`
-    - echo $(docker ps)
-    - echo -------------------------------------------
+    - docker ps
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} ps
-    - echo -------------------------------------------
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} ps --services
-    - echo -------------------------------------------
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} ps --status
-    - echo -------------------------------------------
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} context inspect remote
-    - echo -------------------------------------------
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend_*
+    - echo "-------------------------------------------"
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend_* || true
     - if [ $(docker inspect -f '{{.State.Running}}' backend-green_1) = "true" ]; then
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} stop backend-blue
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-blue

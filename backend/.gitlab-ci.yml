@@ -124,7 +124,7 @@ deploy-backend:
 #    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend
 #    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend
 #    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate --scale backend=${BACKEND_REPLICAS} backend
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force *backend_*
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force sausage-store_backend_1 sausage-store_backend_2
     - if [ $(docker inspect -f '{{.State.Running}}' sausage-store_backend-green_1) = "true" ]; then
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} stop backend-blue
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-blue

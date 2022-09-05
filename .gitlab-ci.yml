@@ -9,8 +9,10 @@ frontend:
       - "/frontend/.gitlab-ci.yml"
     strategy: depend # depend нужен, если какой-нибудь дочерний пайплайн свалился, мы знали, что общий пайплайн тоже идёт с ошибкой
   only:
-    changes: # как только происходит изменение в папке frontend, запускается дочерний пайплайн, который лежит в этой папке
+    changes:
       - frontend/**/*
+  except:
+    - schedules
 
 backend:
   stage: module-pipelines
@@ -19,8 +21,10 @@ backend:
       - "/backend/.gitlab-ci.yml"
     strategy: depend
   only:
-    changes:  # как только происходит изменение в папке backend, запускается дочерний пайплайн, который лежит в этой папке
+    changes:
       - backend/**/*
+  except:
+    - schedules
 
 backend-report:
   stage: module-pipelines
@@ -29,8 +33,10 @@ backend-report:
       - "/backend-report/.gitlab-ci.yml"
     strategy: depend
   only:
-    changes:  # как только происходит изменение в папке backend-report, запускается дочерний пайплайн, который лежит в этой папке
+    changes:
       - backend-report/**/*
+  except:
+    - schedules
 
 deploy-vault:
   stage: deploy
@@ -43,31 +49,40 @@ deploy-vault:
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
+    - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
+    - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - scp docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/
-    - ssh ${DEV_USER}@${DEV_HOST}
-      "export "VERSION=${VERSION}";
-       export "MONGO_VAULT=${MONGO_VAULT}";
-       export "PSQL_DATASOURCE=${PSQL_DATASOURCE}";
-       export "PSQL_USER=${PSQL_USER}";
-       export "PSQL_PASSWORD=${PSQL_PASSWORD}";
-       export "VAULT_TOKEN=${VAULT_TOKEN}";
-       export "VAULT_URL=${VAULT_URL}";
-       export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
-       export "CI_REGISTRY=${CI_REGISTRY}";
-       export "CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}";
-       export "CI_REGISTRY_USER=${CI_REGISTRY_USER}";
-      /bin/bash -s " < ./deploy.sh
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach vault
+    - docker -H ssh://${DEV_USER}@${DEV_HOST} exec -i -e "VAULT_TOKEN=${VAULT_TOKEN}" vault ash -c "vault kv put secret/sausage-store spring.data.mongodb.uri=${MONGO_VAULT} spring.datasource.username=${PSQL_USER} spring.datasource.password=${PSQL_PASSWORD} spring.datasource.url=${PSQL_DATASOURCE}"
   rules:
-    - if: '$CI_COMMIT_BRANCH == null'
+    - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
-    - if: '$CI_COMMIT_BRANCH != null'
-      when: manual
+    - when: always
+
+deploy-certbot:
+  stage: deploy
+  image: alpine:3.15.0
+  before_script:
+    - apk add openssh-client bash docker docker-compose
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
+  script:
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach certbot
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
 
 slack-message:
   stage: .post
   script:
     - echo "Send notify to Slack"
     - >
-      curl -X POST -H 'Content-type: application/json' --data '{"text":"Развернута новая версия сосисочной http://51.250.67.183."}' https://hooks.slack.com/services/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
-  when: on_success
+      curl -X POST -H 'Content-type: application/json' --data '{"text":"Развернута новая версия сосисочной https://pashkov.hopto.org."}' https://hooks.slack.com/services/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
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: on_success

@@ -3,23 +3,26 @@ services:
 
   backend:
     image: $CI_REGISTRY_IMAGE/sausage-backend:latest
-    container_name: backend
+#    container_name: backend
     restart: always
     environment:
       VAULT_TOKEN: ${VAULT_TOKEN}
       VAULT_URL: ${VAULT_URL}
       REPORT_PATH: /app/log/reports
       LOG_PATH: /app/log
+      VIRTUAL_HOST: "backend"
     networks:
       - sausage-store
 
   backend-report:
     image: $CI_REGISTRY_IMAGE/sausage-backend-report:latest
-    container_name: sausage-store-backend-report
+    container_name: backend-report
     restart: always
     environment:
       VAULT_TOKEN: ${VAULT_TOKEN}
       VAULT_URL: ${VAULT_URL}
+    depends_on:
+      - vault
     networks:
       - sausage-store
   
@@ -29,8 +32,26 @@ services:
     restart: always
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - web-root:/usr/share/nginx/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    environment:
+      DEFAULT_HOST: "backend"
+      VIRTUAL_PORT: "8080"
     networks:
       - sausage-store
+  
+  certbot:
+    image: certbot/certbot:v1.29.0
+    container_name: certbot
+    volumes:
+      - web-root:/usr/share/nginx/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --force-renewal -d ${CERTBOT_DOMAIN}
 
   vault:
     image: vault:1.11.2
@@ -46,3 +67,8 @@ services:
 
 networks:
   sausage-store:
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:

@@ -135,24 +135,24 @@ deploy-backend:
     - echo -------------------------------------------
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} context inspect remote
     - echo -------------------------------------------
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend_1 backend_2
-    - if [ $(docker inspect -f '{{.State.Running}}' sausage-store_backend-green_1) = "true" ]; then
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend_*
+    - if [ $(docker inspect -f '{{.State.Running}}' backend-green_1) = "true" ]; then
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} stop backend-blue
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-blue
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-blue
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d backend-blue
-        while [ $(docker inspect -f '{{.State.Health.Status}}' sausage-store_backend-blue_1) != "healthy" ];
+        while [ $(docker inspect -f '{{.State.Health.Status}}' backend-blue_1) != "healthy" ];
         do
           sleep 5 
         done
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} stop backend-green
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-green
-      elif  [ $(docker inspect -f '{{.State.Running}}' sausage-store_backend-blue_1) = "true" ]; then
+      elif  [ $(docker inspect -f '{{.State.Running}}' backend-blue_1) = "true" ]; then
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} stop backend-green
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-green
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-green
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d backend-green
-        while [ $(docker inspect -f '{{.State.Health.Status}}' sausage-store_backend-green_1) != "healthy" ];
+        while [ $(docker inspect -f '{{.State.Health.Status}}' backend-green_1) != "healthy" ];
         do
           sleep 5
         done

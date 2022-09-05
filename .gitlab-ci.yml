@@ -11,6 +11,10 @@ frontend:
   only:
     changes:
       - frontend/**/*
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: always
 
 backend:
   stage: module-pipelines
@@ -21,6 +25,10 @@ backend:
   only:
     changes:
       - backend/**/*
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: always
 
 backend-report:
   stage: module-pipelines
@@ -31,6 +39,10 @@ backend-report:
   only:
     changes:
       - backend-report/**/*
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: always
 
 deploy-vault:
   stage: deploy
@@ -48,6 +60,10 @@ deploy-vault:
   script:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach vault
     - docker -H ssh://${DEV_USER}@${DEV_HOST} exec -i -e "VAULT_TOKEN=${VAULT_TOKEN}" vault ash -c "vault kv put secret/sausage-store spring.data.mongodb.uri=${MONGO_VAULT} spring.datasource.username=${PSQL_USER} spring.datasource.password=${PSQL_PASSWORD} spring.datasource.url=${PSQL_DATASOURCE}"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: always
 
 deploy-certbot:
   stage: deploy
@@ -73,4 +89,7 @@ slack-message:
     - echo "Send notify to Slack"
     - >
       curl -X POST -H 'Content-type: application/json' --data '{"text":"Развернута новая версия сосисочной https://pashkov.hopto.org."}' https://hooks.slack.com/services/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
-  when: on_success
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: on_success

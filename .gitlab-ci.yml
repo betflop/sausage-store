@@ -11,10 +11,6 @@ frontend:
   only:
     changes:
       - frontend/**/*
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    - when: always
 
 backend:
   stage: module-pipelines
@@ -25,10 +21,6 @@ backend:
   only:
     changes:
       - backend/**/*
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    - when: always
 
 backend-report:
   stage: module-pipelines
@@ -39,10 +31,6 @@ backend-report:
   only:
     changes:
       - backend-report/**/*
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    - when: always
 
 deploy-vault:
   stage: deploy
@@ -81,7 +69,6 @@ deploy-certbot:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach certbot
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: always
 
 slack-message:
   stage: .post

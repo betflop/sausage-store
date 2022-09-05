@@ -137,9 +137,9 @@ deploy-backend:
         while [ $(docker inspect -f '{{.State.Health.Status}}' backend-blue_1) != "healthy" ];
         do
           sleep 5 
-        done
+        done;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} stop backend-green
-        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-green
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-green;
       elif  [ $(docker inspect -f '{{.State.Running}}' backend-blue_1) = "true" ]; then
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} stop backend-green
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-green
@@ -148,10 +148,10 @@ deploy-backend:
         while [ $(docker inspect -f '{{.State.Health.Status}}' backend-green_1) != "healthy" ];
         do
           sleep 5
-        done
+        done;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} stop backend-blue
-        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-blue
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-blue;
       else
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-blue
-        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d backend-blue
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d backend-blue;
       fi

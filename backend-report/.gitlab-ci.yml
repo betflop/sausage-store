@@ -127,4 +127,3 @@ deploy-backend-report:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend-report
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-report
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate backend-report
- 

@@ -147,3 +147,4 @@ deploy-backend:
         while [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-green_1 -f health=healthy) ]; echo "Wait sausage-store_backend-green_1 will be healthy..." do sleep 15; done;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -s -f backend-blue;
       fi
+ 

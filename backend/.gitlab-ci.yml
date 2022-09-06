@@ -113,7 +113,7 @@ deploy-backend:
   before_script:
     - apk update && apk add openssh-client bash docker docker-compose curl
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr --detach '\r' | ssh-add -
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts

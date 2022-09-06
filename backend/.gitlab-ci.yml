@@ -128,7 +128,6 @@ deploy-backend:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} ps
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} ps --services
     - echo "-------------------------------------------"
-#    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force sausage-store_backend-blue_1 || true
     - if ! [ -z $(docker ps -q --filter name=sausage-store_backend-green_1) ]; then
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} stop backend-blue;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -f backend-blue;

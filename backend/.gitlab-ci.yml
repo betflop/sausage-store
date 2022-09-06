@@ -137,14 +137,14 @@ deploy-backend:
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -s -f backend-blue;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-blue;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d backend-blue;
-        while [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-blue_1 -f health=healthy) ]; echo "Wait sausage-store_backend-blue_1 will be healthy..." do sleep 15; done;
+        while [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-blue_1 -f health=healthy) ]; echo "Wait sausage-store_backend-blue_1 will be healthy..."; do sleep 15; done;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -s -f backend-green;
       elif ! [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-blue_1) ]; then
         echo "It's sausage-store_backend-blue_1"
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -s -f backend-green;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-green;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d backend-green;
-        while [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-green_1 -f health=healthy) ]; echo "Wait sausage-store_backend-green_1 will be healthy..." do sleep 15; done;
+        while [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-green_1 -f health=healthy) ]; echo "Wait sausage-store_backend-green_1 will be healthy..."; do sleep 15; done;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -s -f backend-blue;
       fi
  

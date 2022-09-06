@@ -113,37 +113,29 @@ deploy-backend:
   before_script:
     - apk update && apk add openssh-client bash docker docker-compose curl
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - echo "$SSH_PRIVATE_KEY" | tr --detach '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
     - docker context create remote --docker "host=ssh://${DEV_USER}@${DEV_HOST}"
     - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-#    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend
-#    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend
-#    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate --scale backend=${BACKEND_REPLICAS} backend
     - docker -H ssh://${DEV_USER}@${DEV_HOST} ps
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} ps
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} ps --services
-    - docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-green_1
-    - docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-green -f health=healthy
-    - docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-blue_1
-    - docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-blue -f health=healthy
-    - echo "-------------------------------------------"
-    - if ! [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-green_1) ]; then
-        echo "It's sausage-store_backend-green_1"
-        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -s -f backend-blue;
+  script:
+    - if ! [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps --quiet --filter name=sausage-store_backend-green_1) ]; then
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend-blue;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-blue;
-        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d backend-blue;
-        until [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-blue -f health=healthy) ]; echo "Wait while backend-blue will be healthy..."; do sleep 15; done;
-        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -s -f backend-green;
-      elif ! [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-blue_1) ]; then
-        echo "It's sausage-store_backend-blue_1"
-        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -s -f backend-green;
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate --scale backend-blue=${BACKEND_REPLICAS} backend-blue;
+        until [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps --quiet --filter name=sausage-store_backend-blue --force health=healthy) ]; echo "Wait until backend-blue will be healthy..."; do sleep 10; done;
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend-green;
+      elif ! [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps --quiet --filter name=sausage-store_backend-blue_1) ]; then
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend-green;
         docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-green;
-        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up -d backend-green;
-        until [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps -q --filter name=sausage-store_backend-green -f health=healthy) ]; echo "Wait while backend-green will be healthy..."; do sleep 15; done;
-        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm -s -f backend-blue;
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate --scale backend-green=${BACKEND_REPLICAS} backend-green;
+        until [ -z $(docker -H ssh://${DEV_USER}@${DEV_HOST} ps --quiet --filter name=sausage-store_backend-green --force health=healthy) ]; echo "Wait until backend-green will be healthy..."; do sleep 10; done;
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force backend-blue;
+      else
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull backend-blue;
+        docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate --scale backend-blue=${BACKEND_REPLICAS} backend-blue;
       fi

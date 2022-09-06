@@ -111,7 +111,11 @@ deploy-backend:
   stage: deploy
   image: alpine:3.15.0
   before_script:
-    - apk update && apk add openssh-client bash docker docker-compose curl
+    - apk update && apk add openssh-client 
+    - apk add bash 
+    - apk add docker 
+    - apk add docker-compose 
+    - apk add curl
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh

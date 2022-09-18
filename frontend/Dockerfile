@@ -6,4 +6,4 @@ RUN npm install && npm run build
 
 FROM nginx:1.23.1-alpine
 COPY --from=builder /usr/src/app/dist/frontend /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 8080

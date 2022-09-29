@@ -98,7 +98,8 @@ upload-frontend-latest:
   script:
     - docker pull $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-frontend:latest
-    - docker push $CI_REGISTRY_IMAGE/sausage-frontend:latest
+# latest->broken
+    - docker push $CI_REGISTRY_IMAGE/sausage-frontend:broken
   rules:
     - changes:
       - frontend/**/*
@@ -118,5 +119,6 @@ deploy-frontend:
     - docker --context remote login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force frontend
-    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull frontend
+#pull last docker version with tag da1572c99cf404eb14b065b49c5009247e4c1f29
+    - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull frontend:da1572c99cf404eb14b065b49c5009247e4c1f29
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate frontend

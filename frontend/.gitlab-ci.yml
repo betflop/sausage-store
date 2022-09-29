@@ -96,8 +96,8 @@ upload-frontend-latest:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
+    - docker pull $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA
 # сейчас не пушим с тегом latest, потому что хотим использовать предыдущий билд с тегом da1572c99cf404eb14b065b49c5009247e4c1f29
-#    - docker pull $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA
 #    - docker tag $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-frontend:latest
 #    - docker push $CI_REGISTRY_IMAGE/sausage-frontend:latest
   rules:

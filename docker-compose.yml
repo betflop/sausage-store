@@ -52,7 +52,7 @@ services:
       - sausage-store
   
   frontend:
-    image: $CI_REGISTRY_IMAGE/sausage-frontend:latest
+    image: $CI_REGISTRY_IMAGE/sausage-frontend:docker
     container_name: frontend
     restart: always
     ports:

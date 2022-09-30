@@ -2,7 +2,7 @@ version: "3.8"
 services:
 
   backend-blue:
-    image: $CI_REGISTRY_IMAGE/sausage-backend:latest
+    image: $CI_REGISTRY_IMAGE/sausage-backend:docker
 #    container_name: backend-blue
     restart: always
     environment:
@@ -21,7 +21,7 @@ services:
       - sausage-store
 
   backend-green:
-    image: $CI_REGISTRY_IMAGE/sausage-backend:latest
+    image: $CI_REGISTRY_IMAGE/sausage-backend:docker
 #    container_name: backend-green
     restart: always
     environment:
@@ -40,7 +40,7 @@ services:
       - sausage-store
 
   backend-report:
-    image: $CI_REGISTRY_IMAGE/sausage-backend-report:latest
+    image: $CI_REGISTRY_IMAGE/sausage-backend-report:docker
     container_name: backend-report
     restart: always
     environment:

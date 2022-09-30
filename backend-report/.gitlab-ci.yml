@@ -104,8 +104,8 @@ upload-backend-report:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY_IMAGE/sausage-backend-report:$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE/sausage-backend-report:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend-report:latest
-    - docker push $CI_REGISTRY_IMAGE/sausage-backend-report:latest
+    - docker tag $CI_REGISTRY_IMAGE/sausage-backend-report:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend-report:docker
+    - docker push $CI_REGISTRY_IMAGE/sausage-backend-report:docker
   rules:
     - changes:
       - backend-report/**/*

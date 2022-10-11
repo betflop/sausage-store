@@ -76,7 +76,7 @@ deploy-certbot:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
 
-goto-infrastructure:
+deploy-infrastructure:
   stage: .post
   trigger:
     project: d.pashkov/infrastructure

@@ -76,12 +76,11 @@ deploy-certbot:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
 
-slack-message:
+deploy-infrastructure:
   stage: .post
-  script:
-    - echo "Send notify to Slack"
-    - >
-      curl -X POST -H 'Content-type: application/json' --data '{"text":"Развернута новая версия сосисочной https://pashkov.hopto.org."}' https://hooks.slack.com/services/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
+  trigger:
+    project: d.pashkov/infrastructure
+    branch: argoCD
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never

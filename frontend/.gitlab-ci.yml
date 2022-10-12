@@ -120,3 +120,4 @@ deploy-frontend:
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} rm --stop --force frontend
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} pull frontend
     - docker-compose -H ssh://${DEV_USER}@${DEV_HOST} up --detach --force-recreate frontend
+ 

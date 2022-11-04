@@ -11,25 +11,11 @@ include:
 
 
 stages:
-   - test-code-base
    - build
    - docker-build
    - test
    - release
    - deploy
-
-
-test-code-base:
-  image:
-    name: golang:1.19.3
-    entrypoint: [""]
-  stage: test
-  script:
-    - cd backend
-    - go test -v ./...
-  rules:
-    - changes:
-        - backend/**/*
 
 
 build-backend-code-job:

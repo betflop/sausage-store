@@ -1,3 +1,6 @@
 [submodule "infrastructure"]
 	path = infrastructure
 	url = https://gitlab.praktikum-services.ru/d.pashkov/infrastructure
+[submodule "sausage-store-infrastructure"]
+	path = sausage-store-infrastructure
+	url = https://github.com/sudmed/sausage-store-infrastructure
